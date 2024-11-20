@@ -13,7 +13,7 @@ LDFLAGS= -g -N -Ttext=0x10000
 ASMFLAGS= -g
 
 CSRC= kernel.c queue.c process.c
-ASMSRC= boot.S box.S process_asm.S
+ASMSRC= boot.S box.S process_asm.S timer.S
 
 KERNEL= kernel
 COBJ=$(patsubst %.c,%.o,$(CSRC)) 

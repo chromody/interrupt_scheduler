@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 int box(unsigned int sr, unsigned int sc, unsigned int er, unsigned int ec);
+void clear_src(unsigned int startRow, unsigned int startColumn, unsigned int endRow, unsigned int endColumn); //Prototype to clear at a ordered pair, defined in libos.a
 int p1();
 int p2();
 int p3(); 
@@ -16,15 +17,33 @@ void enable_interrupts();
 void disable_interrupts();
 int get_el();
 int main(void) {
+
+    clear_src(0, 0, term_txtheight(), term_txtwidth()); // clearing the section that we draw in
  
     create_process(p1);
     create_process(p2);
     create_process(p3);
     create_process(p4);
 
+    setup_EVT();
+    init_timer();
+
     go();
 
 	return 0;
+}
+
+// Name: clear_src
+// Arguments: unsigned int srow, unsigned int scol, unsigned int erow, unsigned int ecol
+// Purpose: This will clear a defined section of the terminal
+void clear_src(unsigned int startRow, unsigned int startColumn, unsigned int endRow, unsigned int endColumn) {
+
+	const char c = ' ';
+	for(unsigned int x = startRow; x < endRow; ++x) {
+		for(unsigned int y = startColumn; y < endColumn; ++y) {
+			putc_to(x, y, c);
+		}
+	}
 }
 
 int p1() {
