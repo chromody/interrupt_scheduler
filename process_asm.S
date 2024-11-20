@@ -51,7 +51,8 @@ dispatch:
     mrs     x0, ELR_EL1
     str     x0, [x1, 16*16]
 
-    //	Save the value of x1 into the process's PCB
+    //TODO:
+    //	Save the value of x1 into the process's PCB 
 
     // Enqueue the current process to the ready Q (call enqueue) 
     adr     x0, ReadyQ              // enqueue takes a pointer to the queue and 
@@ -63,12 +64,13 @@ dispatch:
     bl      enqueue                 // Put the current processes PCB into the ready Q
 
  restore_context:
-     // Dequeue the next process to run
+    // Dequeue the next process to run
     adr     x0, ReadyQ              // dequeue has one argument, the address of the ready Q
     bl      dequeue                 // call dequeue, x0 will have a ptr to the returned PCB
     adr     x1, Running             // We need to set the returned PCB as "running"
     str     x0, [x1]                // store the pointer to the PCB into the Running variable
     ldr     x2, [x0]                // x1 now has the value of the stack ptr (we cant ldr sp directly) //x0 holds the stack pointer of the pcb
+    //FIGURE OUT:
     mov	    sp, x2 //x1? doesnt x2 have it?
 
     ldr     x0, [sp, 16*15+8]   // Restore PSTATE
@@ -122,6 +124,8 @@ dispatch:
     restore x0 and x1
     */
 
+    //FIGURE OUT:
+    //is this how we save and restore x0, x1
     sub sp, sp, 16
     stp x0, x1, [sp]
 
@@ -133,6 +137,7 @@ dispatch:
     ldp     x28, x29, [x1, 16*14]    // Restore x26, x27
     ldr     x30, [x1, 16*15]
 
+    //FIGURE OUT:
     //	restore x0 and x1			    
     ldp     x0, x1, [x1]         // ????????
 
