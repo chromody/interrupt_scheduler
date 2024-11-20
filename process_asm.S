@@ -53,6 +53,8 @@ dispatch:
 
     //TODO:
     //	Save the value of x1 into the process's PCB 
+    str x0, [x1, 0] 
+    str x1, [x1, 8]
 
     // Enqueue the current process to the ready Q (call enqueue) 
     adr     x0, ReadyQ              // enqueue takes a pointer to the queue and 
@@ -151,8 +153,8 @@ dispatch:
     bl      dequeue                 // call dequeue, x0 will have a ptr to the returned PCB
     adr     x1, Running             // We need to set the returned PCB as "running"
     str     x0, [x1]                // store the pointer to the PCB into the Running variable
-    ldr     x2, [x0]                // x1 now has the value of the stack ptr (we cant ldr sp directly)
-    mov	    sp, x2
+    ldr     x1, [x0]                // x1 now has the value of the stack ptr (we cant ldr sp directly)
+    mov	    sp, x1
     
     ldr     x0, [sp, 16*15+8]   // Restore PSTATE
     msr     SPSR_EL1, x0

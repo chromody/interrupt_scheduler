@@ -56,7 +56,6 @@ int p1() {
             hello[11] = '0';
         else 
             hello[11]++;
-        dispatch();
     }
     return 0;
 }
@@ -71,7 +70,6 @@ int p2() {
             hello[11] = '0';
         else 
             hello[11]++;
-        dispatch();
     }
     return 0;
 }
@@ -85,7 +83,6 @@ int p3() {
             hello[11] = '0';
         else 
             hello[11]++;
-        dispatch();
     }
     return 0;
 }
@@ -99,7 +96,6 @@ int p4() {
             hello[11] = '0';
         else 
             hello[11]++;
-        dispatch();
     }
     return 0;
 }

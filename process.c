@@ -34,11 +34,11 @@ int create_process(int (*pfun)()) {
     uint64_t *sp = alloc_stack();
     if (sp == NULL) return -1;
     sp += STACK_SIZE;
-    for (uint64_t i = 0; i < 34; i++) {
+    for (uint64_t i = 0; i < 33; i++) {
         sp--;
         *sp = 0;
     }   
-    *(sp+32) = (uint64_t) pfun;
+    *(sp+30) = (uint64_t) pfun;
     PCB_t *pcb = alloc_pcb();
     if (pcb == NULL) return -1;
     pcb->sp = (uint64_t) sp;
