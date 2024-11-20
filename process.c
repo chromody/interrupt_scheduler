@@ -1,47 +1,49 @@
 #include "process.h"
 #include "queue.h"
 
-int create_process(int (*code_address)()) {
-	uint64_t* stackptr = alloc_stack();
-	if (stackptr == NULL) {return -1;}
+PCB_t *Running = 0;
+PCB_Q_t ReadyQ;
 
-	uint64_t* sp = stackptr + STACK_SIZE;
+void notcalled() {Running = 0;}  // quickfix dummy function to remove 
+                                 //  warning the Running is not used
+                                 //  it is used in process_asm.S
+#define X30_OFFSET 30
+#define MAX_STACKS 10
+#define STACK_SIZE 2048
+#define NULL 0
 
-	for (int i = 0; i <= 32; ++i) {
-		--sp;
-		*sp = 0;
-	}
-
-	*(sp+30) = (uint64_t)code_address;
-	
-	PCB_t* pcb = alloc_pcb();
-	if (pcb == NULL) {return -1;}
-
-	pcb->sp = sp;
-	pcb->pid = nextPID++;
-
-	enqueue(&readyQueue, pcb);
-
-	return 0;
+static uint64_t Stacks[MAX_STACKS][STACK_SIZE];
+static uint32_t Next_stack = 0;
+uint64_t *alloc_stack() {
+    if (Next_stack >= 10) return NULL;
+    return Stacks[Next_stack++];
 }
 
-uint64_t* alloc_stack() {
-	static int next_stack = 0;
-	if (readyQueue.size > MAX_PROCESSES) {
-		return NULL;
-	}
-	return stacks[next_stack++];
+#define MAX_PCBS 10
+static PCB_t Pcbs[MAX_PCBS];
+static uint32_t Next_pcb = 0;
+PCB_t *alloc_pcb() {
+    if (Next_pcb >= 10) return NULL;
+    return &(Pcbs[Next_pcb++]);
 }
 
-PCB_t* alloc_pcb() {
-	static int next_process = 0;
-	if (readyQueue.size > MAX_PROCESSES) {
-		return NULL;
-	}
-	return &pcbs[next_process++];
-}
+static uint32_t Next_process = 0;
 
-PCB_t *running; // Pointer to the currently running PCB
-int nextPID = 1;
-uint64_t stacks[MAX_PROCESSES][STACK_SIZE]; // Fixed-size array for stacks
-PCB_t pcbs[MAX_PROCESSES];
+int create_process(int (*pfun)()) {
+    // create the stack
+    uint64_t *sp = alloc_stack();
+    if (sp == NULL) return -1;
+    sp += STACK_SIZE;
+    for (uint64_t i = 0; i < 33; i++) {
+        sp--;
+        *sp = 0;
+    }   
+    *(sp+30) = (uint64_t) pfun;
+    PCB_t *pcb = alloc_pcb();
+    if (pcb == NULL) return -1;
+    pcb->sp = (uint64_t) sp;
+    pcb->pid = Next_process++;
+    pcb->next = NULL;
+    enqueue(&ReadyQ, pcb);
+    return 0; 
+}

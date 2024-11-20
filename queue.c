@@ -1,39 +1,24 @@
 #include "queue.h"
 
-// Enqueue a PCB to the ready queue
+#define NULL 0
 void enqueue(PCB_Q_t *q, PCB_t *pcb) {
-    if (q->size >= MAX_PROCESSES) {
-        return; // Queue is full
-    }
-    
-    pcb->next = NULL; // Set the next pointer of the new PCB
-
-    if (q->tail) {
-        q->tail->next = pcb; // Link the new PCB at the end
+    pcb->next = NULL;
+    if (q->tail == NULL) {
+        q->head = q->tail = pcb;
     } else {
-        q->head = pcb; // Set head if queue is empty
+        q->tail->next = pcb;
+        q->tail = pcb;
     }
-
-    q->tail = pcb; // Update the tail
-    q->size++; // Increment the size of the queue
 }
-
-// Dequeue a PCB from the ready queue
 PCB_t *dequeue(PCB_Q_t *q) {
-    if (q->size == 0) {
-        return NULL; // Queue is empty
-    }
+    PCB_t *temp = NULL;
+    if (q->head == NULL)
+        return NULL;        
     
-    PCB_t *pcb = q->head; // Get the head PCB
-    q->head = pcb->next; // Move the head pointer to the next PCB
-    
-    if (q->head == NULL) {
-        q->tail = NULL; // Update tail if queue is now empty
-    }
-
-    q->size--; // Decrement the size of the queue
-    pcb->next = NULL; // Clean up the next pointer
-    return pcb; // Return the dequeued PCB
+    temp = q->head;
+    if (q->head == q->tail)
+        q->head = q->tail = NULL;
+    else
+        q->head = q->head->next;
+    return temp;
 }
-
-PCB_Q_t readyQueue;

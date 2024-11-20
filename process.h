@@ -1,27 +1,20 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 #include <stdint.h>
-#include <stddef.h>
 
-#define MAX_PROCESSES 4
-#define STACK_SIZE 1024
+int create_process(int (*pfun)());
 
-//--Structure --------------------------------------------------------------------------------------
-typedef struct PCB {
-	uint64_t* sp;
-	uint32_t pid;
-	struct PCB *next;
-} PCB_t;
+typedef struct PCB PCB_t;
+struct PCB {
+    uint64_t sp;  
+    uint64_t iaddr; 
+    uint32_t pid; 
+    PCB_t *next;
+};
 
-int create_process(int (*code_address)());
-
-uint64_t* alloc_stack();
-PCB_t *alloc_pcb();
-
-extern PCB_t *running; // Pointer to the currently running PCB
-extern int nextPID;
-extern uint64_t stacks[MAX_PROCESSES][STACK_SIZE]; // Fixed-size array for stacks
-extern PCB_t pcbs[MAX_PROCESSES];
-
-
+typedef struct PCB_Q PCB_Q_t;
+struct PCB_Q {
+    PCB_t *head;
+    PCB_t *tail;
+};
 #endif
