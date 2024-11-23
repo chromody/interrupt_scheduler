@@ -2,7 +2,10 @@
 .global go
 
 .extern ReadyQ
-.extern Running
+//.extern Running
+
+.section .text
+   Running: .quad 0
 
 go:
    b restore_context
@@ -29,8 +32,9 @@ dispatch:
     sub     x1, x1, 16*17 // Make room for the process context
 
     // Store the process's x0 and x1 onto process stack
-    str x0, [x1, #0]     // Store x0 into the process stack at address x1
-    str x1, [x1, #8]     // Store x1 into the process stack at address x1 + 8
+    str x0, [x1]     // Store x0 into the process stack at address x1
+    ldr x0, [sp]
+    str x0, [x1, #8]     // Store x1 into the process stack at address x1 + 8
     
 
     // Save the proces general purpose registers
@@ -53,24 +57,25 @@ dispatch:
     str     x30, [x1, 16*15]
 
     mrs     x0, SPSR_EL1            // Save the process PSTATE
-    str     x0, [sp, 16*15+8]
+    str     x0, [x1, 16*15+8]
 
     mrs     x0, ELR_EL1
     str     x0, [x1, 16*16]
 
     //TODO:
     //	Save the value of x1 into the process's PCB 
-    str x0, [x1, 0] 
-    str x1, [x1, 8]
+    //str x0, [x1, 0] 
+    //str x1, [x1, 8]
+    adr x2, Running
+    ldr x2, [x2]
+    str x1, [x2]
 
     // Enqueue the current process to the ready Q (call enqueue) 
     adr     x0, ReadyQ              // enqueue takes a pointer to the queue and 
     adr     x4, Running             //    a pointer to a PCB
-    ldr     x4, [x4]                // put the first value in the PCB (the stack pointer) into x1 
-    mov     x1, sp
-    str     x1, [x4]                //    Then store the new top of stack that is now in x4 to the PCB 
-    mov     x1, x4                  // Note: the first element in the pcb is the top of stack
+    ldr     x1, [x4]                // put the first value in the PCB (the stack pointer) into x1 
     bl      enqueue                 // Put the current processes PCB into the ready Q
+
 
  restore_context:
     // Dequeue the next process to run
@@ -78,7 +83,9 @@ dispatch:
     bl      dequeue                 // call dequeue, x0 will have a ptr to the returned PCB
     adr     x1, Running             // We need to set the returned PCB as "running"
     str     x0, [x1]                // store the pointer to the PCB into the Running variable
-    ldr     x1, [x0]                // x1 now has the value of the stack ptr (we cant ldr sp directly) //x0 holds the stack pointer of the pcb
+    ldr     x2, [x0]                // x1 now has the value of the stack ptr (we cant ldr sp directly) //x0 holds the stack pointer of the pcb
+    mov     x1, x2
+
     //FIGURE OUT:
     ldr     x0, [x1, 16*15+8]   // Restore PSTATE
     msr     SPSR_EL1, x0
@@ -132,13 +139,13 @@ dispatch:
 
     //FIGURE OUT:
     //is this how we save and restore x0, x1
-    sub sp, sp, 16
+    //sub sp, sp, 16
     stp x0, x1, [sp]
 
     bl clear_timer
 
     ldp x0, x1, [sp]
-    add sp, sp, 16
+    //add sp, sp, 16
 
     ldp     x28, x29, [x1, 16*14]    // Restore x26, x27
     ldr     x30, [x1, 16*15]

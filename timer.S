@@ -8,6 +8,7 @@
     error_msg:
         .asciz "Error: unsupported exception!"
 
+    .balign 128
     vector_table:
     .balign 128
         b unsupported

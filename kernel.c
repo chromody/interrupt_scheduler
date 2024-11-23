@@ -1,3 +1,10 @@
+/*
+    Author: Jesus Villanueva-Segovia
+    Class: CSC 4100, 001
+    Professor: Dr. Rogers
+    Date: 11/23/2024
+*/
+
 #include "libos.h"
 #include "process.h"
 #include <stdbool.h>
