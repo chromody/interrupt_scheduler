@@ -7,7 +7,7 @@ int create_process(int (*code_address)()) {
 
 	uint64_t* sp = stackptr + STACK_SIZE;
 
-	for (int i = 0; i <= 33; ++i) {
+	for (int i = 0; i < 34; ++i) {
 		--sp;
 		*sp = 0;
 	}

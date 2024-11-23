@@ -33,6 +33,12 @@ int p2();
 int p3();
 int p4();
 
+void setup_EVT();
+void init_timer();
+void enable_interrupts();
+void disable_interrupts();
+int get_el();
+
 //--Main 
 int main() {
 	int retval = 0;
@@ -56,6 +62,9 @@ int main() {
 
 	retval = create_process(p4);
 	if (retval != 0) {return -1;}
+
+    setup_EVT();
+    init_timer();
 
 	go();
 
