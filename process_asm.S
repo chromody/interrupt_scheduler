@@ -66,13 +66,13 @@ dispatch:
     //	Save the value of x1 into the process's PCB 
     //str x0, [x1, 0] 
     //str x1, [x1, 8]
-    adr x2, Running
+    adr x2, running
     ldr x2, [x2]
     str x1, [x2]
 
     // Enqueue the current process to the ready Q (call enqueue) 
     adr     x0, readyQueue              // enqueue takes a pointer to the queue and 
-    adr     x4, Running             //    a pointer to a PCB
+    adr     x4, running             //    a pointer to a PCB
     ldr     x1, [x4]                // put the first value in the PCB (the stack pointer) into x1 
     bl      enqueue                 // Put the current processes PCB into the ready Q
    //simplified the above due to confusion
@@ -81,7 +81,7 @@ dispatch:
     // Dequeue the next process to run
     adr     x0, readyQueue              // dequeue has one argument, the address of the ready Q
     bl      dequeue                 // call dequeue, x0 will have a ptr to the returned PCB
-    adr     x1, Running             // We need to set the returned PCB as "running"
+    adr     x1, running             // We need to set the returned PCB as "running"
     str     x0, [x1]                // store the pointer to the PCB into the Running variable
     ldr     x2, [x0]                // x1 now has the value of the stack ptr (we cant ldr sp directly) //x0 holds the stack pointer of the pcb
     mov     x1, x2
