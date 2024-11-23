@@ -1,7 +1,7 @@
 /*
 	Author: Jesus Villanueva-Segovia
 	Name: kernel.c
-	Purpose: This will serve as the driver for our operating system? It just draws a box and hello string right now
+	Purpose: This is a driver for a interrupt scheduler that turns off interrupts to switch processes. This prints 4 boxes with a running counter in each one.
 */
 #include "libos.h"
 #include "queue.h"
