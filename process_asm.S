@@ -20,7 +20,7 @@ dispatch:
         Exception return address
     */
 
-    msr     DAIFSet, #0x2
+    msr     DAIFSet, #0x2 //disabling interrupts
 
     str x1, [sp] // Save x1 Temporarily so we can use it to reference the process stack
     
@@ -56,7 +56,7 @@ dispatch:
     mrs     x0, SPSR_EL1            // Save the process PSTATE
     str     x0, [x1, 16*15+8]
 
-    mrs     x0, ELR_EL1
+    mrs     x0, ELR_EL1 // save interrupt
     str     x0, [x1, 16*16]
 
     //TODO:
@@ -72,9 +72,9 @@ dispatch:
     adr     x4, Running             //    a pointer to a PCB
     ldr     x1, [x4]                // put the first value in the PCB (the stack pointer) into x1 
     bl      enqueue                 // Put the current processes PCB into the ready Q
+   //simplified the above due to confusion
 
-
- restore_context:
+ restore_context: //arm-os-coop doesn't have restore_context?
     // Dequeue the next process to run
     adr     x0, ReadyQ              // dequeue has one argument, the address of the ready Q
     bl      dequeue                 // call dequeue, x0 will have a ptr to the returned PCB
