@@ -8,7 +8,7 @@
     error_msg:
         .asciz "Error: unsupported exception!"
 
-    .balign 128
+    .balign 128 //hacky method but it works
     vector_table:
     .balign 128
         b unsupported
@@ -70,16 +70,13 @@ clear_timer:
     msr     CNTV_TVAL_EL0, x0
     ret    
 
-unsupported:
+unsupported: // for errors
     // Load the row (x0 = 0)
     mov     x0, #0
-
     // Load the column (x1 = 0)
     mov     x1, #0
-
     // Load the address of the message into x2
     adr     x2, error_msg
-
     // Call print_to(0, 0, "Error: unsupported exception!")
     bl      print_to
 

@@ -2,10 +2,12 @@
 .global go
 
 .extern ReadyQ
-//.extern Running
+.extern Running
 
+/* 
 .section .text
    Running: .quad 0
+   */
 
 go:
    b restore_context

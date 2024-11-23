@@ -1,5 +1,5 @@
 /*
-    Author: Jesus Villanueva-Segovia
+    Author: Jesus Villanueva-Segovia (with psuedo code and arm-os-coop of Dr. ROgers)
     Class: CSC 4100, 001
     Professor: Dr. Rogers
     Date: 11/23/2024
@@ -27,7 +27,7 @@ int main(void) {
 
     clear_src(0, 0, term_txtheight(), term_txtwidth()); // clearing the section that we draw in
  
-    create_process(p1);
+    create_process(p1); //creating processes
     create_process(p2);
     create_process(p3);
     create_process(p4);
