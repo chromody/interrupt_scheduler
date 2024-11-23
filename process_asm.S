@@ -4,11 +4,6 @@
 .extern ReadyQ
 .extern Running
 
-/* 
-.section .text
-   Running: .quad 0
-   */
-
 go:
    b restore_context
 
