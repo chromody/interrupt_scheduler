@@ -117,7 +117,6 @@ int p1() {
 		if (num > 9) {
 			num = 0; 
 		}
-		dispatch(); //call dispatch
 	}
 }
 
@@ -139,7 +138,6 @@ int p2() {
 		if (num > 9) {
 			num = 0; 
 		}
-		dispatch(); //call dispatch
 	}
 }
 
@@ -161,7 +159,6 @@ int p3() {
 		if (num > 9) {
 			num = 0; 
 		}
-		dispatch();//call dispatch
 	}
 }
 
@@ -183,6 +180,5 @@ int p4() {
 		if (num > 9) {
 			num = 0; 
 		}
-		dispatch();//call dispatch
 	}
 }

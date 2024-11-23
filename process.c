@@ -7,12 +7,12 @@ int create_process(int (*code_address)()) {
 
 	uint64_t* sp = stackptr + STACK_SIZE;
 
-	for (int i = 0; i <= 32; ++i) {
+	for (int i = 0; i <= 33; ++i) {
 		--sp;
 		*sp = 0;
 	}
 
-	*(sp+30) = (uint64_t)code_address;
+	*(sp+32) = (uint64_t)code_address;
 	
 	PCB_t* pcb = alloc_pcb();
 	if (pcb == NULL) {return -1;}
